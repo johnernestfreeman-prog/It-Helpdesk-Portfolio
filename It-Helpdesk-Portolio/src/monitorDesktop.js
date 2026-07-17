@@ -8,28 +8,28 @@ export function createDesktopShortcuts() {
   container.innerHTML = `
     <div class="shortcut-icon" id="shortcut-showcase">
       <div class="icon-image-wrapper">
-        <img src="https://alexmeub.com" alt="Showcase">
+        <img src="/icons/my-computer.png" alt="Showcase">
       </div>
       <span>My Showcase</span>
     </div>
 
     <div class="shortcut-icon" id="shortcut-oregon">
       <div class="icon-image-wrapper">
-        <img src="https://alexmeub.com" alt="Oregon Trail">
+        <img src="/icons/folder-documents.png" alt="IT Ticket">
       </div>
-      <span>The Oregon Trail</span>
+      <span>IT Tickets</span>
     </div>
 
     <div class="shortcut-icon" id="shortcut-doom">
       <div class="icon-image-wrapper">
-        <img src="https://alexmeub.com" alt="Doom">
+        <img src="/icons//applications.png" alt="Project">
       </div>
-      <span>Doom</span>
+      <span>Projects</span>
     </div>
 
     <div class="shortcut-icon" id="shortcut-resume">
       <div class="icon-image-wrapper">
-        <img src="https://alexmeub.com" alt="Resume">
+        <img src="/icons/resume.png" alt="Resume">
       </div>
       <span>Resume.doc</span>
     </div>

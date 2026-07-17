@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web File Explorer</title>
+<style>
+
+:root {
+--bg-color:#ffffff;
+--sidebar-bg:#f0f0f0;
+--border-color: #d9d9d9;
+--text-color: #333333;
+--accent-color:#e5f3ff;
+--hover-color: #e5f3ff;
+--selected-color:#cce8ff;
+
+}
+
+
+*{
+
+
+
+    box-sizing: border-box;
+   margin: 0;
+   padding: 0%;
+   font-family:  'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   user-select: none;}
+
+
+   body{
+    display: flex;
+    justify-content: center;
+   align-items: center;
+   height: 100vh;
+   background-color: #202020;}
+
+
+   /* Main Window Container */
+   .explorer-window{
+ width: 900px;
+height: 600px;
+background: var(--bg-color);
+border: 1px solid #555;
+box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+display: flex;
+flex-direction: column;
+overflow: hidden;
+border-radius: 4px; }
+
+
+
+
+/* Top Title Bar */
+.title-bar{
+height: 32px;
+background: #fff;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 0 10px;
+border-bottom: 1px solid var(--border-color);
+}
+
+
+.title-text{
+font-size: 12px;
+color: var(--text-color);}
+
+
+/* Address / Toolbar */
+.toolbar  {
+height: 45px;
+border-bottom: 1px solid var(--border-color);
+display: flex;
+align-items: center;
+padding: 0 10px;
+gap: 10px;}
+
+
+
+.nav-buttons{
+    display: flex;
+    gap: 15px;
+}
+
+
+
+.nav-btn{
+width: 28px;
+height: 28px;
+border: none;
+background: transparent;
+cursor: pointer;
+border-radius: 3px;
+display: flex;
+align-items: center;
+justify-content: center;}
+
+
+
+
+.nav-btn:hover{
+background:var(--hover-color);}
+
+
+ .address-bar {
+            flex-grow: 1;
+            height: 28px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 13px;
+            color: #555;
+            background: #fff;
+        }
+
+        /* Body Split Layout */
+        .workspace {
+            display: flex;
+            flex-grow: 1;
+            height: calc(100% - 77px);
+        }
+
+        /* Left Side Navigation */
+        .sidebar {
+            width: 220px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 10px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-item {
+            padding: 6px 20px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-color);
+        }
+
+        .sidebar-item:hover {
+            background: #e1e1e1;
+        }
+
+        .sidebar-item.active {
+            background: var(--selected-color);
+            font-weight: 600;
+        }
+
+        /* Right Side Content Grid */
+        .content-view {
+            flex-grow: 1;
+            background: var(--bg-color);
+            padding: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            grid-auto-rows: max-content;
+            gap: 15px;
+            overflow-y: auto;
+        }
+
+        /* Individual File / Folder Item */
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 8px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            border-radius: 3px;
+            max-width: 100px;
+        }
+
+        .file-item:hover {
+            background: var(--hover-color);
+            border-color: #b8dcff;
+        }
+
+        .file-item.selected {
+            background: var(--selected-color);
+            border-color: #7da2ce;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+        }
+
+        .file-name {
+            font-size: 12px;
+            color: var(--text-color);
+            word-break: break-word;
+            display: -webkit-box;
+            -webkit-line-: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+
+</style>
+
+
+
+
+</head>
+<body>
+
+
+
+
+    <div class="explorer-window">
+
+
+
+
+        <!---Title bar-->
+        <header class="title-bar">
+         <div class="title-left">
+         <img src="images/folder.png" alt="Folder Icon"  class="window-icon">
+         <span class="title-text">File Explorer</span>
+         </div>
+         <div class="window-controls">
+         <button class="win-btn minimize">-</button>
+         <button class="win-btn maximize">▢</button>
+            <button class="win-btn close">✕</button>
+
+
+         </div>
+         </header>
+ 
+         <!-- 2. The Ribbon/Toolbar Row -->
+    <nav class="ribbon-tabs">
+        <button class="tab active">Home</button>
+        <button class="tab">Share</button>
+        <button class="tab">View</button>
+    </nav>
+
+    <!-- 3. Navigation Controls & Address Bar -->
+    <div class="toolbar">
+        <div class="nav-arrows">
+            <button class="arrow-btn" id="backBtn">←</button>
+            <button class="arrow-btn" id="forwardBtn">→</button>
+            <button class="arrow-btn" id="upBtn">↑</button>
+        </div>
+        
+        <!-- The Breadcrumb trail path box -->
+        <div class="address-bar" id="addressBar">
+            <span class="path-segment">This PC</span>
+            <span class="separator">&gt;</span>
+            <span class="path-segment">Documents</span>
+        </div>
+
+        <div class="search-box">
+            <input type="text" placeholder="Search Documents">
+        </div>
+    </div>
+
+    <!-- 4. The Main Split Workspace Container -->
+    <main class="workspace">
+        
+        <!-- Left Side: Collapsible Folder Navigation Tree -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-category">Quick access</div>
+            <div class="sidebar-item active">💻 This PC</div>
+            <div class="sidebar-item">📁 Documents</div>
+            <div class="sidebar-item">📥 Downloads</div>
+            
+            <div class="sidebar-category">Network</div>
+        </aside>
+
+        <!-- Right Side: The Main File Grid / Details View -->
+        <section class="content-view" id="contentView">
+            <!-- Files and folders will be rendered here dynamically -->
+        </section>
+        
+    </main>
+
+    <!-- 5. Bottom Status Bar -->
+    <footer class="status-bar">
+        <span class="item-count">4 items</span>
+        <div class="view-toggles">
+            <button class="view-btn">📄</button>
+            <button class="view-btn">⊞</button>
+        </div>
+    </footer>
+
+</div>
+  
+     
+
+ 
+
+    <script>
+//Mock File System Data Structure
+    const fileSystem = {
+   "This PC" :{
+  type: "root",
+  children: ["Documents", "Downloads", "Pictures", "Music"]
+},
+
+   "Documents": {
+type: "folder",
+parent: "This PC",
+children: ["Project Alpha", "Resume.pdf", "Budget.xlsx"]
+},
+
+"Downloads": {
+
+    type: "folder",
+    parent: "This PC",
+    children: ["Setup.exe", "Song.mp3"]
+},
+
+
+"Pictures": {
+
+    type: "folder",
+    parent: "This PC",
+    children: ["Vacation.jpg", "Profile.png"]
+},
+
+
+"Music": {
+
+type: "folder",
+parent: "This PC",
+children: []
+
+},
+
+
+
+
+"Project Alpha" : {
+
+type: "folder",
+parent: "Documents",
+children: ["index.html", "style.css"]
+
+}
+
+
+    };
+
+
+
+    // UL Element Selectors //
+    const sidebarEl = document.getElementById('sidebar');
+    const contentViewEl= document.getElementById('contentView');
+    const addressBarEl= document.getElementById('addressBar');
+
+
+    let currentFolder = "This PC";
+
+    // Path helper configs -Changes these strings to point to the actual image//
+    const IMAGE_PATHS = {
+
+        PC:'images/this-pc.png',
+        folder: 'images/folder.png',
+        image: 'images/image-file.png',
+        document: 'images/document.png',
+        spreadsheet: 'images/spreadsheet.png',
+        code: 'images/code.png',
+        audio: 'images/audio.png',
+        generic: 'images/generic-file.png',
+        };
+
+
+        //Helper To determine the  visual path based on file extension or type//
+        function getIcon(name) {
+        if (!name.includes('.')) return IMAGE_PATHS.folder; //Folder fallback
+   const ext = name.split('.').pop().toLowerCase();
+    if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) return IMAGE_PATHS.image;
+    if (['pdf', 'docx', 'txt'].includes(ext)) return IMAGE_PATHS.document;
+    if (['xlsx', 'csv'].includes(ext)) return IMAGE_PATHS.spreadsheet;
+    if (['html', 'css', 'js'].includes(ext)) return IMAGE_PATHS.code;
+    if (['mp3', 'wav'].includes(ext)) return IMAGE_PATHS.audio;
+    
+    return IMAGE_PATHS.generic; // Generic file fallback
+}
+
+// Generate Left Navigation Sidebar Elements
+function renderSidebar() {
+    sidebarEl.innerHTML = '';
+    Object.keys(fileSystem).forEach(key => {
+        // Only show main directories in the root sidebar view for clean layout
+        if (fileSystem[key].parent === "This PC" || key === "This PC") {
+            const item = document.createElement('div');
+            item.className = `sidebar-item ${key === currentFolder ? 'active' : ''}`;
+            
+            // Choose the correct sidebar image icon path
+            const sidebarIconSrc = key === "This pc" ? IMAGE_PATHS.PC : IMAGE_PATHS.folder;
+            
+            item.innerHTML = `
+                <img src="${sidebarIconSrc}" alt="" style="width: 16px; height: 16px; object-fit: contain; margin-right: 8px;">
+                <span>${key}</span>
+            `;
+            item.onclick = () => navigateTo(key);
+            sidebarEl.appendChild(item);
+        }
+    });
+}
+
+// Render the contents inside the main grid view pane
+function renderContentView() {
+    contentViewEl.innerHTML = '';
+    const folderData = fileSystem[currentFolder];
+
+    if (!folderData || !folderData.children || folderData.children.length === 0) {
+        contentViewEl.innerHTML = '<div style="color: #999; font-size: 13px; grid-column: 1/-1; text-align: center; padding-top: 40px;">This folder is empty.</div>';
+        return;
+    }
+
+    folderData.children.forEach(itemName => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'file-item';
+
+        const isFolder = !itemName.includes('.');
+        const iconSrc = isFolder ? IMAGE_PATHS.folder : getIcon(itemName);
+
+        // Render layout using an HTML <img> tag styled to fill out the grid container boundaries
+        itemEl.innerHTML = `
+            <div class="icon" style="width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; margin-bottom: 6px;">
+                <img src="${iconSrc}" alt="" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+            <div class="file-name">${itemName}</div>
+        `;
+
+        // Single Click: Handle selection highlight state
+        itemEl.onclick = (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.file-item').forEach(el => el.classList.remove('selected'));
+            itemEl.classList.add('selected');
+        };
+
+    });
+
+ } 
+
+
+
+    
+
+
+
+
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </div>
+
+
+
+    
+</body>
+</html>
+    
