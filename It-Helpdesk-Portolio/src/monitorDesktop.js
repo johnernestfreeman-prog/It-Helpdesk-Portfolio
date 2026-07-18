@@ -1,59 +1,51 @@
 // Injects the retro desktop shortcut icons into the DOM.
 export function createDesktopShortcuts() {
   if (document.getElementById('desktop-shortcuts')) return;
-
+  
   const container = document.createElement('div');
   container.id = 'desktop-shortcuts';
-
   container.innerHTML = `
-    <div class="shortcut-icon" id="shortcut-showcase">
+    <div class="shortcut-icon" id="shortcut-this-pc">
       <div class="icon-image-wrapper">
-        <img src="/icons/my-computer.png" alt="Showcase">
+        <img src="/image/My-PC.png" alt="This PC">
       </div>
-      <span>My Showcase</span>
+      <span>This PC</span>
     </div>
-
-    <div class="shortcut-icon" id="shortcut-oregon">
+    <div class="shortcut-icon" id="shortcut-tickets">
       <div class="icon-image-wrapper">
-        <img src="/icons/folder-documents.png" alt="IT Ticket">
+        <img src="/image/Downloads.png" alt="IT Ticket">
       </div>
       <span>IT Tickets</span>
     </div>
-
-    <div class="shortcut-icon" id="shortcut-doom">
+    <div class="shortcut-icon" id="shortcut-projects">
       <div class="icon-image-wrapper">
-        <img src="/icons//applications.png" alt="Project">
+        <img src="/image/My-Documents.png" alt="Project">
       </div>
       <span>Projects</span>
     </div>
-
     <div class="shortcut-icon" id="shortcut-resume">
       <div class="icon-image-wrapper">
-        <img src="/icons/resume.png" alt="Resume">
+        <img src="/image/My-Resume.png" alt="Resume">
       </div>
       <span>Resume.doc</span>
     </div>
   `;
-
   document.body.appendChild(container);
 }
 
 // Builds the pop-up XP-style windows behind the non-resume icons.
-// Resume.doc reuses the existing #resume-overlay from overlay.js instead of
-// getting its own window here.
 export function createAppWindows() {
   if (document.getElementById('app-windows')) return;
 
   const wrap = document.createElement('div');
   wrap.id = 'app-windows';
-
   wrap.innerHTML = `
-    <!-- My Showcase Window -->
+    <!-- My Showcase Window (Projects) -->
     <div id="window-showcase" class="app-overlay hidden">
       <div class="xp-window app-window">
         <div class="xp-title-bar">
           <div class="xp-title-text">
-            <img src="https://alexmeub.com" alt="icon" class="xp-title-icon">
+            <img src="/images/My-Resume.png" alt="icon" class="xp-title-icon">
             My Showcase
           </div>
           <div class="xp-window-controls">
@@ -81,67 +73,32 @@ export function createAppWindows() {
       </div>
     </div>
 
-    <!-- Oregon Trail Window -->
-    <div id="window-oregon" class="app-overlay hidden">
+    <!-- This PC Window -->
+    <div id="window-pc" class="app-overlay hidden">
       <div class="xp-window app-window game-window">
         <div class="xp-title-bar">
           <div class="xp-title-text">
-            <img src="https://alexmeub.com" alt="icon" class="xp-title-icon">
-            The Oregon Trail
+            <img src="/images/My-PC.png" alt="icon" class="xp-title-icon">
+            This PC
           </div>
           <div class="xp-window-controls">
             <button class="xp-btn-minimize">_</button>
             <button class="xp-btn-maximize">⬜</button>
-            <button class="xp-btn-close" data-close="window-oregon">X</button>
+            <button class="xp-btn-close" data-close="window-pc">X</button>
           </div>
         </div>
         <div class="xp-window-body app-window-body game-window-body">
-          <iframe
-            src="https://archive.org/embed/oregon-trail-deluxe"
-            title="The Oregon Trail"
-            allowfullscreen
-            loading="lazy">
-          </iframe>
+          <iframe src="about:blank" title="This PC" allowfullscreen loading="lazy"></iframe>
         </div>
       </div>
     </div>
-
-    <!-- Doom Window -->
-    <div id="window-doom" class="app-overlay hidden">
-      <div class="xp-window app-window game-window">
-        <div class="xp-title-bar">
-          <div class="xp-title-text">
-            <img src="https://alexmeub.com" alt="icon" class="xp-title-icon">
-            Doom
-          </div>
-          <div class="xp-window-controls">
-            <button class="xp-btn-minimize">_</button>
-            <button class="xp-btn-maximize">⬜</button>
-            <button class="xp-btn-close" data-close="window-doom">X</button>
-          </div>
-        </div>
-        <div class="xp-window-body app-window-body game-window-body">
-          <iframe
-            src="https://archive.org/embed/DOOM_the_game"
-            title="Doom"
-            allowfullscreen
-            loading="lazy">
-          </iframe>
-        </div>
-      </div>
-    </div>
-
-    <!-- BUG FIX: monitorIcons.js has always tried to open "window-tickets"
-         and "window-powershell" for the two on-screen monitor buttons, but
-         neither window was ever created, so those buttons silently did
-         nothing. Adding minimal placeholder windows for both. -->
 
     <!-- Tickets Window -->
     <div id="window-tickets" class="app-overlay hidden">
       <div class="xp-window app-window">
         <div class="xp-title-bar">
           <div class="xp-title-text">
-            <img src="https://alexmeub.com" alt="icon" class="xp-title-icon">
+            <img src="/images/Downloads.png" alt="icon" class="xp-title-icon">
             IT Ticket Queue
           </div>
           <div class="xp-window-controls">
@@ -157,12 +114,12 @@ export function createAppWindows() {
       </div>
     </div>
 
-    <!-- Powershell Window -->
+    <!-- PowerShell Window -->
     <div id="window-powershell" class="app-overlay hidden">
       <div class="xp-window app-window">
         <div class="xp-title-bar">
           <div class="xp-title-text">
-            <img src="https://alexmeub.com" alt="icon" class="xp-title-icon">
+            <img src="/images/PowerShell.png" alt="icon" class="xp-title-icon">
             PowerShell
           </div>
           <div class="xp-window-controls">
@@ -178,19 +135,18 @@ export function createAppWindows() {
       </div>
     </div>
   `;
-
   document.body.appendChild(wrap);
 
   // Wire up every close button inside the app windows
   wrap.querySelectorAll('[data-close]').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (event) => {
+      event.stopPropagation();
       closeApp(btn.getAttribute('data-close'));
     });
   });
 }
 
 export function openApp(windowId) {
-  // "resume-overlay" is a special case — it reuses the existing resume overlay
   if (windowId === 'resume-overlay') {
     const overlay = document.getElementById('resume-overlay');
     if (overlay) overlay.classList.remove('hidden');
@@ -205,40 +161,35 @@ export function closeApp(windowId) {
   if (win) win.classList.add('hidden');
 }
 
-// Maps each shortcut icon id to the window it should open on click
+// FIXED: Maps your shortcut icon HTML element IDs to the matching Window element IDs
 const APP_TARGETS = {
-  'shortcut-showcase': 'window-showcase',
-  'shortcut-oregon': 'window-oregon',
-  'shortcut-doom': 'window-doom',
+  'shortcut-this-pc': 'window-pc',
+  'shortcut-tickets': 'window-tickets',
+  'shortcut-projects': 'window-showcase',
   'shortcut-resume': 'resume-overlay',
 };
 
 export function initMonitorDesktop() {
   const icons = document.querySelectorAll('.shortcut-icon');
-
   icons.forEach(icon => {
-    // Single click: highlight AND open the app, same as clicking an app icon
     icon.addEventListener('click', (event) => {
-      event.stopPropagation(); // Stops click from bleeding into 3D scene
+      event.stopPropagation();
       icons.forEach(i => i.classList.remove('selected'));
       icon.classList.add('selected');
-
+      
       const target = APP_TARGETS[icon.id];
       if (target) openApp(target);
     });
   });
 
-  // Clear highlighting when clicking desktop blank canvas backgrounds
   window.addEventListener('click', () => {
     icons.forEach(i => i.classList.remove('selected'));
   });
 }
 
-// Global utility helper to show or hide shortcuts
 export function toggleDesktopShortcuts(show = true) {
   const container = document.getElementById('desktop-shortcuts');
   if (!container) return;
-
   if (show) {
     container.classList.remove('hidden-shortcuts');
   } else {

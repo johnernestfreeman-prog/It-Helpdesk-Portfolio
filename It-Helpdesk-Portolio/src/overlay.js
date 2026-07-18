@@ -54,7 +54,7 @@ export function createOverlay() {
           <div id="view-home" class="content-view active">
             <div class="welcome-hero">
               <h2>John Freeman</h2>
-              <h3>Aspiring It Help Desk Technician</h3>
+              <h3> It Help Desk Technician</h3>
               <div class="inline-nav">
                 <span class="inline-link" data-target="about">ABOUT</span>
                 <span class="inline-link" data-target="experience">EXPERIENCE</span>
