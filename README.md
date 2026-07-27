@@ -2,7 +2,7 @@
  
 An interactive 3D portfolio site built with Three.js, styled as a Windows XP-era office desk. Visitors click into the workstation to explore projects, resume, and contact info — just like sitting down at the desk yourself.
  
-![Tech Stack](https://skillicons.dev/icons?i=threejs,vite,js,html,css)
+![Tech Stack](https://skillicons.dev/icons?i=vite,js,html,css)
  
 ---
  
