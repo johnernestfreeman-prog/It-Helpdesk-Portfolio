@@ -11,7 +11,7 @@ An interactive 3D portfolio site built with Three.js, styled as a Windows XP-era
 <!-- Replace with your own screenshot, saved in a /screenshots folder in this repo -->
 ![3D Desk Scene](./screenshots/desk-scene.png)
  
-**[🚀 Visit Live Site](https://xp-it-helpdesk-windows-portfolio.netlify.app/)**
+**[🚀 Visit Live Site](https://it-helpdesk-portfolio.netlify.app/)**
  
 ---
  
